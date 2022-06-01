@@ -23,18 +23,18 @@ class GameEngine(object):
 
     AI_PIECE = 2
     WINDOW_LENGTH = 4
-    SQUARESIZE = 100
+    BOX_SIZE = 100
 
     def __init__(self):
         self.board = np.zeros((self.rows, self.cols))
         self.game_over = False
         pygame.init()
 
-        self.width = self.cols * self.SQUARESIZE
-        self.height = (self.rows + 1) * self.SQUARESIZE
+        self.width = self.cols * self.BOX_SIZE
+        self.height = (self.rows + 1) * self.BOX_SIZE
         self.size = (self.width, self.height)
 
-        self.RADIUS = int(self.SQUARESIZE / 2 - 5)
+        self.RADIUS = int(self.BOX_SIZE / 2 - 5)
 
         self.screen = pygame.display.set_mode(self.size)
         self.GamePaint(self.screen)
@@ -52,27 +52,27 @@ class GameEngine(object):
                     sys.exit()
 
                 if event.type == pygame.MOUSEMOTION:
-                    pygame.draw.rect(self.screen, self.BLACK, (0, 0, self.width, self.SQUARESIZE))
+                    pygame.draw.rect(self.screen, self.BLACK, (0, 0, self.width, self.BOX_SIZE))
                     x_pos = event.pos[0]
 
                     if self.turn == self.PLAYER:
-                        pygame.draw.circle(self.screen, self.RED, (x_pos, int(self.SQUARESIZE / 2)), self.RADIUS)
+                        pygame.draw.circle(self.screen, self.RED, (x_pos, int(self.BOX_SIZE / 2)), self.RADIUS)
 
                 pygame.display.update()
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    pygame.draw.rect(self.screen, self.BLACK, (0, 0, self.width, self.SQUARESIZE))
+                    pygame.draw.rect(self.screen, self.BLACK, (0, 0, self.width, self.BOX_SIZE))
 
                     if self.turn == self.PLAYER:
                         x_pos = event.pos[0]
-                        col = int(math.floor(x_pos / self.SQUARESIZE))
+                        col = int(math.floor(x_pos / self.BOX_SIZE))
 
                         if self.board[self.rows - 1][col] == 0:
                             row = self.FindRow(self.board, col)
                             self.board[row][col] = self.PLAYER_PIECE
 
                             if self.PlayerWin(self.board, self.PLAYER_PIECE):
-                                label = self.font.render("Player 1 wins!!", 1, self.RED)
+                                label = self.font.render("You win!!", 1, self.RED)
                                 self.screen.blit(label, (40, 10))
                                 game_over = True
 
@@ -89,7 +89,7 @@ class GameEngine(object):
                     self.board[row][col] = self.AI_PIECE
 
                     if self.PlayerWin(self.board, self.AI_PIECE):
-                        label = self.font.render("Player 2 wins!!", 1, self.YELLOW)
+                        label = self.font.render("Enemy wins!!", 1, self.YELLOW)
                         self.screen.blit(label, (40, 10))
                         self.game_over = True
 
@@ -278,17 +278,17 @@ class GameEngine(object):
     def GamePaint(self, table):
         for c in range(self.cols):
             for r in range(self.rows):
-                pygame.draw.rect(table, self.BLUE, (c * self.SQUARESIZE, r * self.SQUARESIZE + self.SQUARESIZE, self.SQUARESIZE, self.SQUARESIZE))
+                pygame.draw.rect(table, self.BLUE, (c * self.BOX_SIZE, r * self.BOX_SIZE + self.BOX_SIZE, self.BOX_SIZE, self.BOX_SIZE))
                 pygame.draw.circle(table, self.BLACK, (
-                    int(c * self.SQUARESIZE + self.SQUARESIZE / 2), int(r * self.SQUARESIZE + self.SQUARESIZE + self.SQUARESIZE / 2)), self.RADIUS)
+                    int(c * self.BOX_SIZE + self.BOX_SIZE / 2), int(r * self.BOX_SIZE + self.BOX_SIZE + self.BOX_SIZE / 2)), self.RADIUS)
 
         for c in range(self.cols):
             for r in range(self.rows):
                 if self.board[r][c] == self.PLAYER_PIECE:
                     pygame.draw.circle(table, self.RED, (
-                        int(c * self.SQUARESIZE + self.SQUARESIZE / 2), self.height - int(r * self.SQUARESIZE + self.SQUARESIZE / 2)), self.RADIUS)
+                        int(c * self.BOX_SIZE + self.BOX_SIZE / 2), self.height - int(r * self.BOX_SIZE + self.BOX_SIZE / 2)), self.RADIUS)
                 elif self.board[r][c] == self.AI_PIECE:
                     pygame.draw.circle(table, self.YELLOW, (
-                        int(c * self.SQUARESIZE + self.SQUARESIZE / 2), self.height - int(r * self.SQUARESIZE + self.SQUARESIZE / 2)), self.RADIUS)
+                        int(c * self.BOX_SIZE + self.BOX_SIZE / 2), self.height - int(r * self.BOX_SIZE + self.BOX_SIZE / 2)), self.RADIUS)
 
         pygame.display.update()
